@@ -1,0 +1,20 @@
+{
+  "name": "ramadan-points",
+  "version": "1.0.0",
+  "description": "Apis for ramadan points",
+  "main": "server.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon .",
+    "prod": "NODE_ENV=production node server.js"
+  },
+  "keywords": [],
+  "author": "Mustafa Elsharawy",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  }
+}
