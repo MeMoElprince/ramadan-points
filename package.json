@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon .",
-    "prod": "NODE_ENV=production node server.js"
+    "prod": "NODE_ENV=production nodemon server.js"
   },
   "keywords": [],
   "author": "Mustafa Elsharawy",
@@ -14,8 +14,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.2.0",
     "helmet": "^7.1.0",
+    "hpp": "^0.2.3",
     "mongoose": "^8.2.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "xss-clean": "^0.1.4"
   }
 }

@@ -7,7 +7,6 @@ dotenv.config({ path: './config.env' });
 // Connect to the database
 const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
 
-console.log({DB});
 console.log('trying to connect to the database....');
 mongoose.connect(DB).then(con => console.log('DB connection successful!')).catch(err => console.log('DB connection failed!', err.message));
 
