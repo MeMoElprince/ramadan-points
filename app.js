@@ -48,7 +48,6 @@ app.use(xss());
 app.use('/api/v1/users', userRouter);
 
 
-
 app.all('*', (req, res, next) => {
     return next(new AppError(`can't find ${req.originalUrl} on this server 404`, 404));
 });
