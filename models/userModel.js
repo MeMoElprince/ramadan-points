@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema({
         }
     ],
     passwordChangedAt: Date,
-
+    token: String
 });
 
 
@@ -82,6 +82,7 @@ userSchema.pre('save', function(next) {
     this.passwordConfirm = undefined;
     next();
 });
+
 
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
