@@ -7,7 +7,7 @@ module.exports = class Email {
         this.to = user.email;
         this.firstName = user.name.split(' ')[0];
         this.url = url;
-        this.from = 'Ramadan-Points <ramadanpoints@gmail.com>';
+        this.from = 'Ramadan Points <ramadanpoints@gmail.com>';
     }
 
     newTransport() {
@@ -54,5 +54,9 @@ module.exports = class Email {
 
     async sendVerification() {
         await this.send('verifyAccount', 'Email Verification from Ramadan Points Familly');
+    }
+
+    async sendResetPassword() {
+        await this.send('resetPassword', 'Password Reset from Ramadan Points Familly');
     }
 }
