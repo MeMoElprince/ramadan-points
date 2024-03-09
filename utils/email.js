@@ -11,16 +11,16 @@ module.exports = class Email {
     }
 
     newTransport() {
-        // if(process.env.NODE_ENV === 'production') {
-        //     // Sendgrid
-        //     return nodemailer.createTransport({
-        //         service: 'gmail',
-        //         auth: {
-        //             user: process.env.EMAIL_USERNAME_PROD,
-        //             pass: process.env.EMAIL_PASSWORD_PROD
-        //         }
-        //     });
-        // }
+        if(process.env.NODE_ENV === 'production') {
+            // Gmail
+            return nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USERNAME_PROD,
+                    pass: process.env.EMAIL_PASSWORD_PROD
+                }
+            });
+        }
         return nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
