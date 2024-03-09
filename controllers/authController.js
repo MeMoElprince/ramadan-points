@@ -36,7 +36,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     // creating token
     const token = tokenFactory.sign({id: newUser._id});
     newUser.token = token;
-    console.log({token});
     await newUser.save({validateBeforeSave: false});
     // sending email and response
     try{
@@ -58,6 +57,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
     
 exports.login = catchAsync(async (req, res, next) => {
+    const {save} = req.querey;
     const {email, password} = req.body;
     // check if email and password exist
     if(!email || !password)
@@ -67,9 +67,8 @@ exports.login = catchAsync(async (req, res, next) => {
     if(!user || !await user.correctPassword(password, user.password))
         return next(new AppError('Incorrect email or password', 401));
     // if everything is ok, send token to client
-    const token = tokenFactory.sign({id: user._id});
+    const token = tokenFactory.sign({id: user._id}, process.env.JWT_SECRET, save === 'true' ? '40d' : '1d');
     user.token = token;
-    console.log({token});
     await user.save({validateBeforeSave: false});
     if(!user.active)
     {

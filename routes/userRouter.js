@@ -11,15 +11,11 @@ router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 router.patch('/verifyMe/:token', authController.verifyMe);
 
-// link       
-
-router.get('/me', authController.protect, userController.getMe);
-// router.get('/updateMe, authController.protect, userController.updateMe');
-// router.delete('/deleteMe', userController.deleteMe);
-
 router.get('/top', userController.getTopUsers);
 
-// router.route('/')
-//     .get(userController.getAllUsers);        
+router.get('/me', authController.protect, userController.getMe);
+router.patch('/updateMe', authController.protect, userController.updateMe);
+router.patch('/changePassword', authController.protect, userController.changePassword);
+
 
 module.exports = router;
