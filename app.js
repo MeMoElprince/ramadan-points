@@ -9,7 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 // const cookieParser = require('cookie-parser');
 // const compression = require('compression');
 
-
+const scheduleRouter = require('./routes/scheduleRouter');
 const userRouter = require('./routes/userRouter');
 const errorController = require('./controllers/errorController');
 const AppError = require('./utils/AppError');
@@ -46,7 +46,7 @@ app.use(xss());
 
 
 app.use('/api/v1/users', userRouter);
-
+app.use('/api/v1/schedules', scheduleRouter);
 
 app.all('*', (req, res, next) => {
     return next(new AppError(`can't find ${req.originalUrl} on this server 404`, 404));

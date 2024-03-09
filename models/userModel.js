@@ -50,17 +50,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    season: [
+    points: {
+        type: Number,
+        default: 0
+    },
+    list: [
         {
-            year: {
-                type: Number,
-                required: [true, 'Year is required']
-            },
-            points: {
-                type: Number,
-                required: [true, 'Points is required'],
-                default: 0
-            }
+            type: mongoose.Schema.ObjectId,
+            ref: 'Schedule'
         }
     ],
     passwordChangedAt: Date,

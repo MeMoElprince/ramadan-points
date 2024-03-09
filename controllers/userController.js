@@ -15,3 +15,17 @@ exports.getMe = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+
+exports.getTopUsers = catchAsync(async (req, res, next) => {
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 10;
+    const skip = (page - 1) * limit;
+    const users = await User.find().sort('-points').limit(limit).skip(skip);
+    res.status(200).json({
+        status: 'success',
+        data: {
+            users
+        }
+    });
+});
