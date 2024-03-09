@@ -4,7 +4,6 @@ const authController = require('../controllers/authController');
 
 const router = Router();
 
-router.get('/logout', authController.logout);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
@@ -13,6 +12,7 @@ router.patch('/verifyMe/:token', authController.verifyMe);
 
 router.get('/top', userController.getTopUsers);
 
+router.get('/logout', authController.protect, authController.logout);
 router.get('/me', authController.protect, userController.getMe);
 router.patch('/updateMe', authController.protect, userController.updateMe);
 router.patch('/changePassword', authController.protect, userController.changePassword);
