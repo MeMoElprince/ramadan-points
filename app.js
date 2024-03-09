@@ -28,7 +28,7 @@ app.use(express.json({limit: '10kb'}));
 const limiter = rateLimit({
     max: 500,
     windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again in an hour!'
+    message: 'هناك الكثير من الطلبات الرجاء المحاوله مره اخرى بعد ساعه'
 });
 app.use('/api', limiter);
 
@@ -49,7 +49,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/schedules', scheduleRouter);
 
 app.all('*', (req, res, next) => {
-    return next(new AppError(`can't find ${req.originalUrl} on this server 404`, 404));
+    return next(new AppError(`غير موجود`, 404));
 });
 
 app.use(errorController);

@@ -21,7 +21,7 @@ const sendErrorProd = (err, req, res) => {
     console.error('Error Message: ', err.message);
     return res.status(500).json({
         status: 'error',
-        message: 'Something went very wrong!'
+        message: 'حدث خطأ ما الرجاء المحاوله مره اخرى'
     });
 }
 
@@ -33,5 +33,8 @@ module.exports = (err, req, res, next) => {
     if(process.env.NODE_ENV === 'development')
         return sendErrorDev(err, req, res);
     else if(process.env.NODE_ENV === 'production')
+    {
+        
         return sendErrorProd(err, req, res);
+    }
 }
