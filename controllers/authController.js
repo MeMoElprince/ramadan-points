@@ -137,8 +137,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({validateBeforeSave: false});
     // send it to user's email
     try{
-        const resetURL = `${process.env.URL_FRONTEND}reset-password/${resetToken}`;
-        const sendEmail = new Email(user, resetURL).sendResetPassword();
+        const sendEmail = new Email(user, resetToken).sendResetPassword();
         await Promise.race([sendEmail, 15000]);
         res.status(200).json({
             status: 'success',
@@ -152,9 +151,24 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     }
 });
 
+exports.resetToken = catchAsync(async (req, res, next) => {
+    // get user based on the token
+    const hashedToken = crypto.createHash('sha256').update(req.body.token).digest('hex');
+    const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
+    // if token has not expired and there is user, send the token to the client
+    if(!user)
+        return next(new AppError('الرمز غير صالح أو انتهت صلاحيته', 400));
+    res.status(200).json({
+        status: 'success',
+        data: {
+            token: req.params.token
+        }
+    });
+});
+
 exports.resetPassword = catchAsync(async (req, res, next) => { 
     // get user based on the token
-    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+    const hashedToken = crypto.createHash('sha256').update(req.body.token).digest('hex');
     const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
     // if token has not expired and there is user, set the new password
     if(!user)
