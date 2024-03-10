@@ -19,7 +19,7 @@ exports.comming = catchAsync(async (req, res, next) => {
     {
         schedules[i].remaining = schedules[i].date - date;   
     }
-
+    
     res.status(200).json({
         status: 'success',
         data: {
