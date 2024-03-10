@@ -10,7 +10,7 @@ exports.comming = catchAsync(async (req, res, next) => {
     const schedules = await Schedule.aggregate([
         {
             $match: {
-                date: { $gt: date, $lte: date + 24 * 7 * 60 * 60 }
+                date: { $gt: date, $lte: date + 24 * 2 * 60 * 60 }
             }
         }
     ]); 
