@@ -19,7 +19,8 @@ exports.verifyMe = catchAsync(async (req, res, next) => {
     await user.save({validateBeforeSave: false});
     if(user.active) return res.status(200).send(`<h1>Your account has been verified already!</h1>`);
     user.active = true;
-    res.redirect(`${process.env.URL_FRONT}`)
+    await user.save({validateBeforeSave: false});
+    res.redirect(`${process.env.URL_FRONTEND}`);
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -34,7 +35,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     // hashing password will happen automatically in the pre save middleware in userModel
     // creating token
-    const token = tokenFactory.sign({id: newUser._id});
+    const token = await tokenFactory.sign({id: newUser._id});
     newUser.token = token;
     await newUser.save({validateBeforeSave: false});
     // sending email and response
@@ -67,7 +68,7 @@ exports.login = catchAsync(async (req, res, next) => {
     if(!user || !await user.correctPassword(password, user.password))
         return next(new AppError('البريد الاكتروني أو كلمة مرورغير صحيحة', 401));
     // if everything is ok, send token to client
-    const token = tokenFactory.sign({id: user._id}, process.env.JWT_SECRET, save === 'true' ? '40d' : '1d');
+    const token = await tokenFactory.sign({id: user._id}, process.env.JWT_SECRET, save === 'true' ? '40d' : '1d');
     user.token = token;
     await user.save({validateBeforeSave: false});
     if(!user.active)

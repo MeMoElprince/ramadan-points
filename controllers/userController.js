@@ -23,6 +23,7 @@ exports.getTopUsers = catchAsync(async (req, res, next) => {
     const skip = (page - 1) * limit;
     const users = await User.find().sort('-points').limit(limit).skip(skip);
     const data = {
+        count: users.length,
         users
     }
     if(req.user)
