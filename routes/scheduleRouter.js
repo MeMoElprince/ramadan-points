@@ -6,8 +6,8 @@ const authController = require('../controllers/authController');
 const router = Router();
 
 
-router.get('/comming', authController.protect, scheduleController.comming);
-router.get('/running', authController.protect, scheduleController.running);
+router.get('/comming', scheduleController.comming);
+router.get('/running', authController.loggedIn, scheduleController.running);
 
 router.patch('/acceptSchedule/:id', authController.protect, scheduleController.acceptSchedule);
 

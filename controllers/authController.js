@@ -90,6 +90,31 @@ exports.login = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.loggedIn = catchAsync(async (req, res, next) => {
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
+        token = req.headers.authorization.split(' ')[1];
+    if(!token)
+        return next();
+    // verification token
+    const decoded = await tokenFactory.verify(token);
+    // check if user still exists
+    const currentUser = await User.findById(decoded.id).select('+active');
+    if(!currentUser)
+        return next();
+    // check if user changed password after the token was issued
+    if(currentUser.changedPasswordAfter(decoded.iat))
+        return next();
+    // grant access to protected route
+    if(!currentUser.active)
+        return next();
+    // checking if the user has a token
+    if(currentUser.token !== token)
+        return next();
+    req.user = currentUser;
+    next();
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
     // getting token and check if it exists
     let token;
