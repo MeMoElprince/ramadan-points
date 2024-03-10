@@ -7,13 +7,32 @@ const AppError = require('../utils/AppError');
 exports.comming = catchAsync(async (req, res, next) => {
     const date = new Date().getTime() / 1000;
     // getting all schedules that are comming today and tomorrow (24 hours)
+    // sorted by date from the nearest to the farthest
+    // const schedules = await Schedule.aggregate([
+    //     {
+    //         $match: {
+    //             date: { $gte: date },
+    //             $expr: { $lt: [{ $subtract: ["$date", date] }, 86400] }
+    //         }
+    //     },
+    //     {
+    //         $sort: {
+    //             date: 1
+    //         }
+    //     }
+    // ]);
     const schedules = await Schedule.aggregate([
         {
             $match: {
                 date: { $gt: date, $lte: date + 24 * 2 * 60 * 60 }
             }
+        },
+        {
+            $sort: {
+                date: 1
+            }
         }
-    ]); 
+    ]);
     
     for(let i = 0; i < schedules.length; i++)
     {
@@ -38,6 +57,16 @@ exports.running = catchAsync(async (req, res, next) => {
                 $match: {
                     date: { $lte: date },
                     $expr: { $gt: [{ $add: ["$date", "$long"] }, date] }
+                }
+            },
+            {
+                $addFields: {
+                    remaining: { $subtract: [{ $add: ["$date", "$long"] }, date] }
+                }
+            },
+            {
+                $sort: {
+                    remaining: 1
                 }
             }
         ]);
@@ -65,6 +94,16 @@ exports.running = catchAsync(async (req, res, next) => {
             $match: {
                 date: { $lte: date },
                 $expr: { $gt: [{ $add: ["$date", "$long"] }, date] }
+            }
+        },
+        {
+            $addFields: {
+                remaining: { $subtract: [{ $add: ["$date", "$long"] }, date] }
+            }
+        },
+        {
+            $sort: {
+                remaining: 1
             }
         },
         {
