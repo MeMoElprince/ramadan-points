@@ -7,9 +7,9 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Name is required'],
-        minlength: [2, 'Name must be at least 2 characters long'],
-        maxlength: [26, 'Name must be at most 26 characters long']
+        required: [true, 'الاسم مطلوب'],
+        minlength: [2, 'الاسم يجب ان يكون على الاقل حرفين'],
+        maxlength: [26, 'الاسم يجب ان يكون على الاكثر 26 حرف']
     },
     img: {
         type: String,
@@ -17,24 +17,24 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'البريد الالكتروني مطلوب'],
         unique: true,
-        validate: [validator.isEmail, 'Please provide a valid email']
+        validate: [validator.isEmail, 'برجاء ادخال بريد الكتروني صحيح']
     },
     password: {
         type: String,
-        required: [true, 'Password is required'],
+        required: [true, 'كلمه المرور مطلوبه'],
         select: false
     },
     passwordConfirm: {
         type: String,
-        required: [true, 'Confirm Password is required'],
+        required: [true, 'كلمه المرور التأكيديه مطلوبه'],
         // This only works on CREATE and SAVE
         validate: {
             validator: function(el) {
                 return el === this.password;
             },
-            message: 'Passwords are not the same'
+            message: 'كلمه المرور و كلمه المرور التأكيديه يجب ان تكونا متطابقتين'
         },
         select: false
     },
