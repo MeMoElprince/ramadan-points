@@ -5,14 +5,43 @@ const AppError = require('../utils/AppError.js');
 const Schedule = require('../models/scheduleModel');
 
 exports.getMe = catchAsync(async (req, res, next) => {
-    const user = await User.findById(req.user.id).select('+active');
-    if(!user) return next(new AppError('User not found', 404));
-    if(!user.active) return next(new AppError('Your account has not been verified yet!', 401));
+    const {user} = req;
+    const date = new Date().getTime() / 1000;
+    let unCompletedScedules = await Schedule.aggregate([
+        {
+            $addFields: {
+                scheduleLastDate: { $add: ["$date", "$long"] }
+            }
+        },
+        {
+            $match: {
+                scheduleLastDate:  { $lt: date }
+            }
+        },
+        {
+            $match: {
+                _id: { $nin: user.list }
+            }
+        }
+    ]);
+    const rank = await User.find().sort('-points').countDocuments({points: {$gt: user.points}});
+    unCompletedScedules = unCompletedScedules.length;
+    const completedSchedules = user.list.length;
+    let sameUser = {};
+    sameUser = {
+        ...user._doc
+    }
+    sameUser.unCompletedScedules = unCompletedScedules;
+    sameUser.completedSchedules = completedSchedules;
+    sameUser.rank = rank + 1;
+    const data = {
+        user: sameUser
+    }
+    console.log({sameUser});
+    console.log({completedSchedules, unCompletedScedules});
     res.status(200).json({
         status: 'success',
-        data: {
-            user
-        }
+        data
     });
 });
 
@@ -74,35 +103,33 @@ exports.changePassword = catchAsync(async (req, res, next) => {
 });
 
 
-exports.getAnalytics = catchAsync(async (req, res, next) => {
-    const date = new Date().getTime() / 1000;
-    const {user} = req;
-    // getting the schedules that are in the past and the user has not completed
-    let unCompletedScedules = await Schedule.aggregate([
-        {
-            $addFields: {
-                scheduleLastDate: { $add: ["$date", "$long"] }
-            }
-        },
-        {
-            $match: {
-                scheduleLastDate:  { $lt: date }
-            }
-        },
-        {
-            $match: {
-                _id: { $nin: user.list }
-            }
-        }
-    ]);
-    unCompletedScedules = unCompletedScedules.length;
-    const completedSchedules = user.list.length;
-    res.status(200).json({
-        status: 'success',
-        data: {
-            unCompletedScedules,
-            completedSchedules
-        }
-    });
-
-});
+// exports.getAnalytics = catchAsync(async (req, res, next) => {
+//     const {user} = req;
+//     // getting the schedules that are in the past and the user has not completed
+//     let unCompletedScedules = await Schedule.aggregate([
+//         {
+//             $addFields: {
+//                 scheduleLastDate: { $add: ["$date", "$long"] }
+//             }
+//         },
+//         {
+//             $match: {
+//                 scheduleLastDate:  { $lt: date }
+//             }
+//         },
+//         {
+//             $match: {
+//                 _id: { $nin: user.list }
+//             }
+//         }
+//     ]);
+//     unCompletedScedules = unCompletedScedules.length;
+//     const completedSchedules = user.list.length;
+//     res.status(200).json({
+//         status: 'success',
+//         data: {
+//             unCompletedScedules,
+//             completedSchedules
+//         }
+//     });
+// });
