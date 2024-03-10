@@ -13,7 +13,13 @@ exports.comming = catchAsync(async (req, res, next) => {
                 date: { $gt: date, $lte: date + 24 * 60 * 60 }
             }
         }
-    ]);
+    ]); 
+    
+    for(let i = 0; i < schedules.length; i++)
+    {
+        schedules[i].remaining = schedules[i].date - date;   
+    }
+
     res.status(200).json({
         status: 'success',
         data: {
@@ -35,6 +41,15 @@ exports.running = catchAsync(async (req, res, next) => {
                 }
             }
         ]);
+
+
+    
+        for(let i = 0; i < schedules.length; i++)
+        {
+            schedules[i].remaining = schedules[i].date + schedules[i].long - date;   
+        }
+
+
         return res.status(200).json({
             status: 'success',
             data: {
@@ -58,6 +73,10 @@ exports.running = catchAsync(async (req, res, next) => {
             }
         }
     ]);
+    for(let i = 0; i < schedules.length; i++)
+    {
+        schedules[i].remaining = schedules[i].date + schedules[i].long - date;   
+    }
     res.status(200).json({
         status: 'success',
         data: {
