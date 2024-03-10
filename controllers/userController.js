@@ -45,7 +45,6 @@ exports.getMe = catchAsync(async (req, res, next) => {
     });
 });
 
-
 exports.getTopUsers = catchAsync(async (req, res, next) => {
     const page = req.query.page * 1 || 1;
     const limit = req.query.limit * 1 || 10;
@@ -101,35 +100,3 @@ exports.changePassword = catchAsync(async (req, res, next) => {
         message: 'Password changed successfully'
     });
 });
-
-
-// exports.getAnalytics = catchAsync(async (req, res, next) => {
-//     const {user} = req;
-//     // getting the schedules that are in the past and the user has not completed
-//     let unCompletedScedules = await Schedule.aggregate([
-//         {
-//             $addFields: {
-//                 scheduleLastDate: { $add: ["$date", "$long"] }
-//             }
-//         },
-//         {
-//             $match: {
-//                 scheduleLastDate:  { $lt: date }
-//             }
-//         },
-//         {
-//             $match: {
-//                 _id: { $nin: user.list }
-//             }
-//         }
-//     ]);
-//     unCompletedScedules = unCompletedScedules.length;
-//     const completedSchedules = user.list.length;
-//     res.status(200).json({
-//         status: 'success',
-//         data: {
-//             unCompletedScedules,
-//             completedSchedules
-//         }
-//     });
-// });

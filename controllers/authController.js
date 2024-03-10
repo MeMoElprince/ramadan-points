@@ -37,7 +37,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     // hashing password will happen automatically in the pre save middleware in userModel
     // creating token
-    const names = ['تمر هندي','صوبيا','سمبوسه', 'قطايف', 'كنافه'];
+    const names = ['جيلي','سوبيا','سمبوسة', 'بسبوسة'];
     const num = Math.floor((Math.random() * 1000000000000)) % names.length;
     const counter = await Counter.findOneAndUpdate({ name: 'userId' }, { $inc: { sequence_value: 1 } }, { new: true, upsert: true });
     const img = `${names[num]} ${counter.sequence_value}`;
