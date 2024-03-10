@@ -22,11 +22,14 @@ exports.getTopUsers = catchAsync(async (req, res, next) => {
     const limit = req.query.limit * 1 || 10;
     const skip = (page - 1) * limit;
     const users = await User.find().sort('-points').limit(limit).skip(skip);
+    const data = {
+        users
+    }
+    if(req.user)
+        data.currentUser = req.user;
     res.status(200).json({
         status: 'success',
-        data: {
-            users
-        }
+        data
     });
 });
 

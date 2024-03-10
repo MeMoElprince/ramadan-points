@@ -11,10 +11,10 @@ router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword', authController.resetPassword);
 router.post('/resetToken', authController.resetToken);
 
-router.patch('/verifyMe/:token', authController.verifyMe);
+router.get('/verifyMe/:token', authController.verifyMe);
 
 
-router.get('/top', userController.getTopUsers);
+router.get('/top', authController.loggedIn, userController.getTopUsers);
 
 
 router.get('/logout', authController.protect, authController.logout);

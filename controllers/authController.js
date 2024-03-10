@@ -9,7 +9,7 @@ const Email = require('../utils/email');
 
 // i will make it patch soon
 
-exports.verifyMe = catchAsync(async (req, res, next) => {
+exports.verifyMe = catchAsync(async (req, res, next) => {  
     const {token} = req.params;
     const decoded = await tokenFactory.verify(token);
     const user = await User.findById(decoded.id).select('+active');
@@ -19,7 +19,7 @@ exports.verifyMe = catchAsync(async (req, res, next) => {
     await user.save({validateBeforeSave: false});
     if(user.active) return res.status(200).send(`<h1>Your account has been verified already!</h1>`);
     user.active = true;
-    res.status(200).send(`<h1>Your account has been verified successfully!</h1> <br> <h2> You can login now..</h2>`);
+    res.redirect(`${process.env.URL_FRONT}`)
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
