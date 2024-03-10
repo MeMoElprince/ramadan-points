@@ -15,7 +15,7 @@ router.get('/verifyMe/:token', authController.verifyMe);
 
 
 router.get('/top', authController.loggedIn, userController.getTopUsers);
-
+router.get('/analytics', authController.loggedIn, userController.getAnalytics);
 
 router.get('/logout', authController.protect, authController.logout);
 router.get('/me', authController.protect, userController.getMe);

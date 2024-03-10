@@ -2,7 +2,7 @@
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError.js');
-
+const Schedule = require('../models/scheduleModel');
 
 exports.getMe = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.user.id).select('+active');
@@ -71,4 +71,38 @@ exports.changePassword = catchAsync(async (req, res, next) => {
         status: 'success',
         message: 'Password changed successfully'
     });
+});
+
+
+exports.getAnalytics = catchAsync(async (req, res, next) => {
+    const date = new Date().getTime() / 1000;
+    const {user} = req;
+    // getting the schedules that are in the past and the user has not completed
+    let unCompletedScedules = await Schedule.aggregate([
+        {
+            $addFields: {
+                scheduleLastDate: { $add: ["$date", "$long"] }
+            }
+        },
+        {
+            $match: {
+                scheduleLastDate:  { $lt: date }
+            }
+        },
+        {
+            $match: {
+                _id: { $nin: user.list }
+            }
+        }
+    ]);
+    unCompletedScedules = unCompletedScedules.length;
+    const completedSchedules = user.list.length;
+    res.status(200).json({
+        status: 'success',
+        data: {
+            unCompletedScedules,
+            completedSchedules
+        }
+    });
+
 });
