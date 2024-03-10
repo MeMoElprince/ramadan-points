@@ -3,19 +3,14 @@ const validator = require('validator');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Name is required']
     },
     img: {
-        type: String,
-        default: function (){
-            const names = ['تمر هندي','عرق سوس','صوبيا','سمبوسه', 'رز بلبن', 'كاسترد', 'قطايف', 'جلاش', 'بسبوسه', 'كنافه'];
-            const num = Math.floor((Math.random() * 1000000000000)) % 10;
-            return names[num];
-        },
-        enum: ['تمر هندي','عرق سوس','صوبيا','سمبوسه', 'رز بلبن', 'كاسترد', 'قطايف', 'جلاش', 'بسبوسه', 'كنافه']
+        type: String
     },
     email: {
         type: String,

@@ -5,6 +5,7 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const tokenFactory = require('../utils/tokenFactory');
 const Email = require('../utils/email');
+const Counter = require('../models/counterModel');
 
 
 // i will make it patch soon
@@ -24,6 +25,7 @@ exports.verifyMe = catchAsync(async (req, res, next) => {
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
+
     // getting data
     const {name, email, password, passwordConfirm} = req.body;
     // creating user
@@ -35,7 +37,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     // hashing password will happen automatically in the pre save middleware in userModel
     // creating token
+    const names = ['تمر هندي','صوبيا','سمبوسه', 'قطايف', 'كنافه'];
+    const num = Math.floor((Math.random() * 1000000000000)) % names.length;
+    const counter = await Counter.findOneAndUpdate({ name: 'userId' }, { $inc: { sequence_value: 1 } }, { new: true, upsert: true });
+    const img = `${names[num]} ${counter.sequence_value}`;
     const token = await tokenFactory.sign({id: newUser._id});
+    newUser.img = img;
     newUser.token = token;
     await newUser.save({validateBeforeSave: false});
     // sending email and response
