@@ -14,11 +14,11 @@ exports.verifyMe = catchAsync(async (req, res, next) => {
     const {token} = req.params;
     const decoded = await tokenFactory.verify(token);
     const user = await User.findById(decoded.id).select('+active');
-    if(!user) return next(new AppError('User not found', 404));
-    if(user.token !== token) return next(new AppError('Invalid token', 400));
+    if(!user) return res.status(200).send(`<h1>هذا المستخدم غير موجود</h1>`);
+    if(user.token !== token) return res.status(200).send(`<h1>هذا الرمز غير صالح</h1>`);
     user.token = undefined;
     await user.save({validateBeforeSave: false});
-    if(user.active) return res.status(200).send(`<h1>Your account has been verified already!</h1>`);
+    if(user.active) return res.redirect(`${process.env.URL_FRONTEND}`);
     user.active = true;
     await user.save({validateBeforeSave: false});
     res.redirect(`${process.env.URL_FRONTEND}`);
