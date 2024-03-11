@@ -7,7 +7,7 @@ const xss = require('xss-clean');
 // const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 // const cookieParser = require('cookie-parser');
-// const compression = require('compression');
+const compression = require('compression');
 
 const scheduleRouter = require('./routes/scheduleRouter');
 const userRouter = require('./routes/userRouter');
@@ -27,8 +27,8 @@ app.use(express.json({limit: '10kb'}));
 
 const limiter = rateLimit({
     max: 500,
-    windowMs: 10 * 60 * 1000,
-    message: 'هناك الكثير من الطلبات الرجاء المحاوله مره اخرى خلال 10 دقائق'
+    windowMs: 20 * 60 * 1000,
+    message: 'هناك الكثير من الطلبات الرجاء المحاوله مره اخرى خلال 20 دقيقه'
 });
 app.use('/api', limiter);
 
@@ -42,7 +42,7 @@ app.use(mongoSanitize());
 app.use(xss());
 // app.use(hpp());
 // app.use(cookieParser());
-// app.use(compression());
+app.use(compression());
 
 
 app.use('/api/v1/users', userRouter);

@@ -189,8 +189,11 @@ for(let i = 0; i < array.length; i++) {
         continue;
     }
     if(i < array.length - 1) {
+
         array[i].points = 25;
         array[i].long = array[i + 1].date - array[i].date;
+        if(array[i].name === 'Fajr')
+            array[i].long = 7200;
     }
 
 }
@@ -199,4 +202,4 @@ array[array.length - 1].points = 25;
 array[array.length - 1].long = 34980;
 
 // console.log({array});
-Schedule.insertMany(array);
+// Schedule.insertMany(array);

@@ -69,7 +69,7 @@ const filterObj = (obj, ...allowedFields) => {
 }
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-    if(req.body.password || req.body.passwordConfirm) return next(new AppError('This route is not for password updates. Please use /changePassword', 400));
+    if(req.body.password || req.body.passwordConfirm) return next(new AppError('هذا المسار ليس لتغيير كلمه المرور, استخدم مسار مناسب', 400));
     const filteredBody = filterObj(req.body, 'name', 'phoneNumber');
     const user = await User.findByIdAndUpdate(req.user.id, {
         ...filteredBody
@@ -89,12 +89,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.changePassword = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.user.id).select('+password');
-    if(!(await user.correctPassword(req.body.currentPassword, user.password))) return next(new AppError('Your current password is wrong!', 401));
+    if(!(await user.correctPassword(req.body.currentPassword, user.password))) return next(new AppError('كلمه مرورك الحاليه غير صحيحه!', 401));
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
     res.status(200).json({
         status: 'success',
-        message: 'Password changed successfully'
+        message: 'تم تغيير كلمه المرور بنجاح'
     });
 });
