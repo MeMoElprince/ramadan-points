@@ -32,11 +32,6 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    console.log(req.requestTime);
-    next();
-});
 
 app.use(mongoSanitize());
 app.use(xss());
