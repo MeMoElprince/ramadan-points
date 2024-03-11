@@ -28,6 +28,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     // getting data
     const {name, email, password, passwordConfirm} = req.body;
+    const user = await User.findOne({email});
+    if(user) return next(new AppError('هذا البريد الإلكتروني موجود بالفعل', 400));
     // creating user
     const newUser = await User.create({
         name,
