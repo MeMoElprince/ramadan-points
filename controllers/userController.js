@@ -24,7 +24,15 @@ exports.getMe = catchAsync(async (req, res, next) => {
             }
         }
     ]);
-    const rank = await User.find().sort('-points').countDocuments({points: {$gt: user.points}});
+    const id = user._id;
+    const users = await User.find().sort('-points');
+    let rank = 0;
+    for(let i = 0; i < users.length; i++) {
+        if(users[i]._id.toString() === id.toString()) {
+            rank = i;
+            break;
+        }
+    }
     unCompletedScedules = unCompletedScedules.length;
     const completedSchedules = user.list.length;
     let sameUser = {};
