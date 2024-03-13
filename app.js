@@ -27,7 +27,7 @@ app.use(express.json({limit: '10kb'}));
 
 const limiter = rateLimit({
     max: 2000,
-    windowMs: 20 * 60 * 1000,
+    windowMs: 10 * 60 * 1000,
     message: 'هناك الكثير من الطلبات الرجاء المحاوله مره اخرى خلال 20 دقيقه'
 });
 app.use('/api', limiter);
