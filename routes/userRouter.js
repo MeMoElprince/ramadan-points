@@ -7,7 +7,7 @@ const router = Router();
 
 
 const authLimit = rateLimit({
-    max: 10,
+    max: 20,
     windowMs: 5 * 60 * 1000,
     message: 'هناك الكثير من الطلبات الرجاء المحاوله مره اخرى خلال 5 دقائق'
 });
