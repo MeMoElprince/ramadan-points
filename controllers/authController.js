@@ -189,9 +189,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.resetToken = catchAsync(async (req, res, next) => {
     // get user based on the token
     const hashedToken = crypto.createHash('sha256').update(req.body.token).digest('hex');
-    const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
+    const user = await User.findOne({email: req.body.email, passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
     // if token has not expired and there is user, send the token to the client
-    if(!user)
+    if(!user)   
         return next(new AppError('الرمز غير صالح أو انتهت صلاحيته', 400));
     res.status(200).json({
         status: 'success',
@@ -204,7 +204,7 @@ exports.resetToken = catchAsync(async (req, res, next) => {
 exports.resetPassword = catchAsync(async (req, res, next) => { 
     // get user based on the token
     const hashedToken = crypto.createHash('sha256').update(req.body.token).digest('hex');
-    const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
+    const user = await User.findOne({email: req.body.email, passwordResetToken: hashedToken, passwordResetExpires: {$gt: Date.now()}});
     // if token has not expired and there is user, set the new password
     if(!user)
         return next(new AppError('الرمز غير صالح أو انتهت صلاحيته', 400));
