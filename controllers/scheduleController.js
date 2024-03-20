@@ -128,8 +128,9 @@ exports.acceptSchedule = catchAsync(async (req, res, next) => {
     const {user} = req;
     const {id} = req.params;
     const schedule = await Schedule.findById(id);
-    if(!schedule) return next(new AppError('No schedule found with that ID', 404));
-    if(user.list.includes(id)) return next(new AppError('You have already accepted this schedule', 400));
+    if(!schedule) return next(new AppError('هذا التحدي غير موجود', 404));
+    if(user.list.includes(id)) return next(new AppError('لقد قبلت هذا التحدي بالفعل', 400));
+    if(schedule.date > new Date().getTime() / 1000) return next(new AppError('لا يمكنك قبول تحدي لم يبدأ بعد', 400));
     user.list.push(id);
     user.points += schedule.points;
     await user.save({validateBeforeSave: false});
